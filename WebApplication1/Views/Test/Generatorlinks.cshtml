@@ -1,0 +1,26 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Generatorlinks</title>
+</head>
+<body>
+    @{
+        int k = 1;
+        foreach(var item in Model)
+        {
+            <p>
+                <a href="@item">Link @k</a>
+            </p>
+            k++;
+        }
+    }
+    <a asp-controller="Test" asp-action="Message">Link TagHelpers</a>
+</body>
+</html>
