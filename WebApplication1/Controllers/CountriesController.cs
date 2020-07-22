@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
-
+using WebApplication1.Repos;
 namespace WebApplication1.Controllers
 {
     public class CountriesController : Controller
@@ -24,24 +24,56 @@ namespace WebApplication1.Controllers
             var countryContext = _context.Countries.Include(c => c.City);
             return View(await countryContext.ToListAsync());
         }
+        public IActionResult StateNotExist()
+        {
+            return View();
+        }
+
+
+        public IActionResult NoResult()
+        {
+           return View();
+        }
 
         // GET: Countries/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction("StateNotExist");
             }
 
             var country = await _context.Countries
                 .Include(c => c.City)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (country == null)
             {
-                return NotFound();
+                return RedirectToAction("StateNotExist");
             }
 
             return View(country);
+        }
+        
+        public IActionResult Find()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Find(string name)
+        {
+            if (string.IsNullOrEmpty(name)==false)
+            {
+                if(LookingForState.LookForState(name)==true)
+                {
+
+                }
+                else
+                {
+                    return RedirectToAction("StateNotExist");
+                }
+            }
+            return RedirectToAction("NoResult");
         }
 
         // GET: Countries/Create
@@ -56,7 +88,7 @@ namespace WebApplication1.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,StateCode,Area,Population,CityId")] Country country)
+        public async Task<IActionResult> Create([Bind("Id,Name,StateCode,Area,Population,CityId,RegionId")] Country country)
         {
             if (ModelState.IsValid)
             {

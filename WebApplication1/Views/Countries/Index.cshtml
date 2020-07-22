@@ -10,38 +10,43 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Список стран</title>
+    <title>List of states</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
 </head>
 <body>
-    <h2 class="text-center text-success">Список стран</h2>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+    <h2 class="text-center text-success">List of states (countries)</h2>
     <p>
-        <!--- <a asp-action="Create">Create New</a> -->
-        @Html.ActionLink("Create New", "Create")
-
+        @Html.ActionLink("Find a state", "Find")
     </p>
     <table class="table table-bordered table-striped table-hover">
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    @Html.DisplayNameFor(model => model.Name) 
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.StateCode)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Area)
+                    @Html.DisplayNameFor(model => model.City)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Area) (km"2)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Population)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.City)
+                    @Html.DisplayNameFor(model => model.Region)
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-    @foreach (var item in Model) {
+            @foreach (var item in Model)
+            {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
@@ -50,13 +55,16 @@
                     @Html.DisplayFor(modelItem => item.StateCode)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.City.Name)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Area)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Population)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.City.Name)
+                    @Html.DisplayFor(modelItem => item.Region.Name)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
@@ -64,8 +72,8 @@
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
-    }
+            }
         </tbody>
     </table>
-    </body>
+</body>
     </html>

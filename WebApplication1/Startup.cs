@@ -45,9 +45,14 @@ namespace WebApplication1
             app.UseDeveloperExceptionPage();
             app.UseEndpoints(endpoints =>
             {
-                 endpoints.MapControllerRoute(
-                    name: "Proba", 
-                    pattern: "{controller=Countries}/{action=Index}"); // route template состоит из 2х сегментов
+                //https://localhost:44393/Countries/details/1
+                endpoints.MapControllerRoute(
+                   name: "Details",
+                   pattern: "{controller}/{action}/{id}"); // route template состоит из 2х сегментов
+
+                endpoints.MapControllerRoute(
+                   name: "Proba",
+                   pattern: "{controller=Countries}/{action=Index}"); // route template состоит из 2х сегментов
 
             });
 

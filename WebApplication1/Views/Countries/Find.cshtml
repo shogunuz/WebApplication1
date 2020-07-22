@@ -1,0 +1,43 @@
+﻿@model WebApplication1.Models.Country
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find a state</title>
+    <style>
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        .item {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h4>Looking for a state..</h4>
+<hr />
+    <form action="Find" method="post">
+        <div class="item">
+            <label>Country</label>
+            <input type="text" name="Name" />
+        </div>
+        
+        <input type="submit" value="Отправить" />
+    </form>
+
+<div>
+    @Html.ActionLink("Back to the List", "Index")
+</div>
+
+</body>
+</html>
