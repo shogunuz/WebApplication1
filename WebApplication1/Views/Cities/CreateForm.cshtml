@@ -1,4 +1,4 @@
-﻿@model WebApplication1.Models.Country
+﻿@model WebApplication1.Models.City
 
 @{
     Layout = null;
@@ -8,9 +8,11 @@
 
 <html>
 <head>
+
     <meta name="viewport" content="width=device-width" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find a state</title>
+
+    <title>Create</title>
     <style>
         label {
             display: inline-block;
@@ -24,20 +26,20 @@
 </head>
 <body>
 
-<h4>Looking for a state..</h4>
-<hr />
-    <form action="Find" method="post">
+    <h4>City</h4>
+    <hr />
+    <form action="Create" method="post">
         <div class="item">
-            <label>Input state name</label>
+            <label>Input city name</label>
             <input type="text" name="Name" />
         </div>
-        
+
         <input type="submit" value="Отправить" />
     </form>
 
-<div>
-    @Html.ActionLink("Back to the List", "Index")
-</div>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
 
 </body>
 </html>

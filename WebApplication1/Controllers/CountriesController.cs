@@ -29,7 +29,6 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-
         public IActionResult NoResult()
         {
            return View();
@@ -62,18 +61,27 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Find(string name)
         {
-            if (string.IsNullOrEmpty(name)==false)
+            
+            if (string.IsNullOrEmpty(name) == false)
+                {
+                   return innerMethod();
+                }
+            else
             {
-                if(LookingForState.LookForState(name)==true)
-                {
-
-                }
-                else
-                {
-                    return RedirectToAction("StateNotExist");
-                }
+                return RedirectToAction("NoResult");
             }
-            return RedirectToAction("NoResult");
+            IActionResult innerMethod()
+            {
+                var countryContext = _context.Countries.Include(c => c.City);
+                foreach (var c in countryContext.ToList())
+                {
+                    if (c.Name == name)
+                    {
+                        return RedirectToAction("Details", new { id = c.Id });
+                    }
+                }
+                return RedirectToAction("StateNotExist");
+            }
         }
 
         // GET: Countries/Create
@@ -88,8 +96,10 @@ namespace WebApplication1.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,StateCode,Area,Population,CityId,RegionId")] Country country)
+        public async Task<IActionResult> Create([Bind("Id,Name,StateCode,Area,Population")] Country country, 
+            string City, string Region)
         {
+            if(string.IsNullOrEmpty(City)==false && string.IsNullOrEmpty(Region)==false)
             if (ModelState.IsValid)
             {
                 _context.Add(country);

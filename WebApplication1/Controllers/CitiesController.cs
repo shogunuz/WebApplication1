@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
+using WebApplication1.Repos;
 
 namespace WebApplication1.Controllers
 {
@@ -43,7 +44,8 @@ namespace WebApplication1.Controllers
         }
 
         // GET: Cities/Create
-        public IActionResult Create()
+        [HttpGet]
+        public IActionResult CreateForm()
         {
             return View();
         }
@@ -53,15 +55,20 @@ namespace WebApplication1.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] City city)
+        public async Task<IActionResult> Create([Bind("Name")] City city)
         {
+           // string name = Request.Form["Name"];
+
             if (ModelState.IsValid)
             {
                 _context.Add(city);
                 await _context.SaveChangesAsync();
+
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(city);
+
+            return RedirectToAction("Details", new {id = city.Id });
         }
 
         // GET: Cities/Edit/5
