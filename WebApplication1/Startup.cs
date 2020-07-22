@@ -45,32 +45,10 @@ namespace WebApplication1
             app.UseDeveloperExceptionPage();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute("Calc","{controller}/{action}/{x}/{y}");
-
-                endpoints.MapControllerRoute(
+                 endpoints.MapControllerRoute(
                     name: "Proba", 
-                    pattern: "{controller=Calc}/{action=Index}"); // route template состоит из 2х сегментов
-                                                                   // endpoints.MapControllerRoute("Proba", "{controller}/{action}");
+                    pattern: "{controller=Countries}/{action=Index}"); // route template состоит из 2х сегментов
 
-               // endpoints.MapControllerRoute(name:"Regexnk", 
-                 //   pattern: "testlinks/{controller}/{somesign:regex([a-z]{{3}}\\d{{3}})}/{action}");
-
-                endpoints.MapControllerRoute(
-                    name: "Regexcalc",
-                    pattern: "newcalcs/{controller}/{action}/{somevalue}",
-                    defaults: new
-                    {
-                        controller = "test",
-                        action = "newcalc"
-                    },
-                    constraints: new
-                    {
-                        somevalue = new RegexRouteConstraint("[a-z]{2}\\d{2}")
-                    });
-                endpoints.MapControllerRoute(
-                    name: "Generatorssilok",
-                    pattern: "newlinks/{controller}/{action}/{id?}"
-                    );
             });
 
         }
