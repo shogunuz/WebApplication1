@@ -13,7 +13,7 @@ namespace WebApplication1.Controllers
     public class CitiesController : Controller
     {
         private readonly CountryContext _context;
-
+        public int cityId { get; set; }
         public CitiesController(CountryContext context)
         {
             _context = context;
@@ -56,12 +56,24 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([Bind("Name")] City city)
         {
+           
             if (ModelState.IsValid)
             {
-                _context.Add(city);
-                await _context.SaveChangesAsync();
+                int tmp;
+                CreateCity cc = new CreateCity();
+                tmp = cc.DoesCityExist(city.Name);
+                if(tmp >= 0)
+                {
+                    cityId = tmp;
+                    return RedirectToAction(nameof(Details), tmp);
+                }
+                else
+                {
+                    _context.Add(city);
+                    await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
             return RedirectToAction(nameof(Details), 4);

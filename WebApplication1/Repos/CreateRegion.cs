@@ -1,28 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using WebApplication1.Models;
-using WebApplication1.Repos;
 
 namespace WebApplication1.Repos
 {
-    public class CreateCity
+    public class CreateRegion
     {
-        public int DoesCityExist(string name)
+        public int DoesRegionExist(string name)
         {
-            return DoesCityExistCheck(name);
+            return DoesRegionExistCheck(name);
         }
-        private int DoesCityExistCheck(string name)
+        private int DoesRegionExistCheck(string name)
         {
             int id = -1;
-            WebRequest request = WebRequest.Create(ConstantStrings.UrlLinkGetCities);
+            WebRequest request = WebRequest.Create(ConstantStrings.UrlLinkGetRegions);
             using (WebResponse response = request.GetResponse())
             using (Stream stream = response.GetResponseStream())
             using (StreamReader streamReader = new StreamReader(stream))
@@ -38,15 +34,14 @@ namespace WebApplication1.Repos
                 {
                     if (reader.TokenType == JsonToken.StartObject)
                     {
-                        City city = serializer.Deserialize<City>(reader);
-                        if (city.Name == name)
+                        Region region = serializer.Deserialize<Region>(reader);
+                        if (region.Name == name)
                         {
-                            id = city.Id;
+                            id = region.Id;
                         }
                     }
                 }
             }
-
             return id;
         }
     }

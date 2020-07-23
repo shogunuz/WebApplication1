@@ -24,6 +24,7 @@ namespace WebApplication1.Models
         public virtual City City { get; set; }
         public virtual int CityId { get; set; }
 
+        public virtual int RegionId { get; set; }
         public virtual Region Region { get; set; }
 
     }

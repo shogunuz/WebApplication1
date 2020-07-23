@@ -12,10 +12,15 @@ namespace WebApplication1.Controllers
     public class CountriesController : Controller
     {
         private readonly CountryContext _context;
-
+        private CreateCity cc;
+        private CreateRegion cr;
+        private int CityId;
+        private int RegionId;
         public CountriesController(CountryContext context)
         {
             _context = context;
+            cc = new CreateCity();
+            cr = new CreateRegion();
         }
 
         // GET: Countries
@@ -88,6 +93,7 @@ namespace WebApplication1.Controllers
         public IActionResult Create()
         {
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Id");
+            ViewData["RegionId"] = new SelectList(_context.Regions, "Id", "Id");
            // ViewBag.Name = 
             return View();
         }
@@ -96,17 +102,32 @@ namespace WebApplication1.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,StateCode,Area,Population")] Country country, 
+        public async Task<IActionResult> Create([Bind("Name,StateCode,Area,Population")] Country country, 
             string City, string Region)
         {
 
             if(string.IsNullOrEmpty(City)==false && string.IsNullOrEmpty(Region)==false)
             if (ModelState.IsValid)
             {
-                _context.Add(country);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                    this.CityId = cc.DoesCityExist(City);
+                    this.RegionId = cr.DoesRegionExist(Region);
+                    if(this.CityId >= 0 && this.RegionId >=0)
+                    {
+                        country.CityId = this.CityId;
+                        country.RegionId = this.RegionId;
+                    }
+                    else if(this.CityId >= 0 && this.RegionId < 0)
+                    {
+                        country.CityId = this.CityId;
+                    }
+                    else if(this.CityId < 0 && this.RegionId >= 0)
+                    {
+                        country.RegionId = this.RegionId;
+                    }
+
+                    _context.Add(country);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
             }
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Id", country.CityId);
             return View(country);
