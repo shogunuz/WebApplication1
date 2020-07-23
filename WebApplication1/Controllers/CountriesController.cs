@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -106,22 +107,20 @@ namespace WebApplication1.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IActionResult> Create(string City, string Region,
-            [Bind("Name,StateCode,Area,Population")] Country country)
+        public async Task<IActionResult> Create(string City, string Region,string Area,
+            [Bind("Name,StateCode,Population")] Country country)
         {
             if (string.IsNullOrEmpty(City) == false && string.IsNullOrEmpty(Region) == false)
             {
-                this.CityId = cc.DoesCityExist(City);
-                this.RegionId = cr.DoesRegionExist(Region);
-
-                country.CityId = this.CityId;
-                country.RegionId = this.RegionId;
+                double.TryParse(Area, NumberStyles.Number, CultureInfo.InvariantCulture, out double area);
+                country.Area = area;
+                country.CityId = cc.DoesCityExist(City);
+                country.RegionId = cr.DoesRegionExist(Region);
 
                 try
                 {
                     _context.Add(country);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Details), country.Id);
                 }
                 catch(Exception ex)
                 {

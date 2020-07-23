@@ -21,18 +21,25 @@
         @Html.ActionLink("Back to the List", nameof(Index))
     </p>
     <table class="table table-bordered table-striped table-hover" width=400>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayFor(model => model.Name)
-            </th>
-            <th>
-                <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-                <a asp-action="Edit" asp-route-id="@Model.Id">Delete</a>
-            </th>
-        </tr>
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>Tools</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>
+                    @Html.DisplayFor(model => model.Name)
+                </th>
+                <th>
+                    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+                    <a asp-action="Edit" asp-route-id="@Model.Id">Delete</a>
+                </th>
+            </tr>
+        </tbody>
     </table>
 </body>
 </html>
