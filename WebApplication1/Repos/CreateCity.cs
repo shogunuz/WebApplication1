@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using WebApplication1.Models;
 using WebApplication1.Repos;
@@ -17,7 +18,14 @@ namespace WebApplication1.Repos
     {
         public int DoesCityExist(string name)
         {
-            return DoesCityExistCheck(name);
+            int id = DoesCityExistCheck(name);
+            if (id >= 0)
+                return id;
+            else
+            {
+                CreateNewCity(name).Wait();
+                return DoesCityExistCheck(name);
+            }
         }
         private int DoesCityExistCheck(string name)
         {
@@ -46,8 +54,16 @@ namespace WebApplication1.Repos
                     }
                 }
             }
-
             return id;
+        }
+        public static Task<HttpResponseMessage> CreateNewCity(string name)
+        {
+           City city = new City { Name = name };
+            HttpClient httpClient = new HttpClient();
+            string json = JsonConvert.SerializeObject(city);
+            HttpContent stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+            return httpClient.PostAsync(ConstantStrings.UrlLinkPostCities,
+                stringContent);
         }
     }
 }

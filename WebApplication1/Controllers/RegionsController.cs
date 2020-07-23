@@ -6,25 +6,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
-using WebApplication1.Repos;
 
 namespace WebApplication1.Controllers
 {
-    public class CitiesController : Controller
+    public class RegionsController : Controller
     {
         private readonly CountryContext _context;
-        public CitiesController(CountryContext context)
+
+        public RegionsController(CountryContext context)
         {
             _context = context;
         }
 
-        // GET: Cities
+        // GET: Regions
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Cities.ToListAsync());
+            return View(await _context.Regions.ToListAsync());
         }
 
-        // GET: Cities/Details/5
+        // GET: Regions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -32,50 +32,40 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
 
-            var city = await _context.Cities
+            var region = await _context.Regions
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (city == null)
+            if (region == null)
             {
                 return NotFound();
             }
 
-            return View(city);
+            return View(region);
         }
 
-        // GET: Cities/Create
-        [HttpGet]
+        // GET: Regions/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Cities/Create
+        // POST: Regions/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Name")] City city)
+        public async Task<IActionResult> Create([Bind("Id, Name")] Region region)
         {
-            int tmp=0;
+            int tmp = 0;
             if (ModelState.IsValid)
             {
-                CreateCity cc = new CreateCity();
-                tmp = cc.DoesCityExist(city.Name);
-                if(tmp >= 0)
-                {
-                    return RedirectToAction(nameof(Details), tmp);
-                }
-                else
-                {
-                    _context.Add(city);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Details), city.Id);
-                }
-            }
+                _context.Add(region);
+                await _context.SaveChangesAsync();
 
+                return RedirectToAction(nameof(Details), tmp);
+            }
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Cities/Edit/5
+        // GET: Regions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -83,22 +73,22 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
 
-            var city = await _context.Cities.FindAsync(id);
-            if (city == null)
+            var region = await _context.Regions.FindAsync(id);
+            if (region == null)
             {
                 return NotFound();
             }
-            return View(city);
+            return View(region);
         }
 
-        // POST: Cities/Edit/5
+        // POST: Regions/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] City city)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Region region)
         {
-            if (id != city.Id)
+            if (id != region.Id)
             {
                 return NotFound();
             }
@@ -107,12 +97,12 @@ namespace WebApplication1.Controllers
             {
                 try
                 {
-                    _context.Update(city);
+                    _context.Update(region);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CityExists(city.Id))
+                    if (!RegionExists(region.Id))
                     {
                         return NotFound();
                     }
@@ -123,10 +113,10 @@ namespace WebApplication1.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(city);
+            return View(region);
         }
 
-        // GET: Cities/Delete/5
+        // GET: Regions/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -134,30 +124,30 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
 
-            var city = await _context.Cities
+            var region = await _context.Regions
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (city == null)
+            if (region == null)
             {
                 return NotFound();
             }
 
-            return View(city);
+            return View(region);
         }
 
-        // POST: Cities/Delete/5
+        // POST: Regions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var city = await _context.Cities.FindAsync(id);
-            _context.Cities.Remove(city);
+            var region = await _context.Regions.FindAsync(id);
+            _context.Regions.Remove(region);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CityExists(int id)
+        private bool RegionExists(int id)
         {
-            return _context.Cities.Any(e => e.Id == id);
+            return _context.Regions.Any(e => e.Id == id);
         }
     }
 }

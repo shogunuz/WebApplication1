@@ -38,7 +38,11 @@ namespace WebApplication1.Controllers
         {
            return View();
         }
-
+        public IActionResult PublishMsg(string str)
+        {
+            ViewBag.Message = str;
+            return View();
+        }
         // GET: Countries/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -85,7 +89,7 @@ namespace WebApplication1.Controllers
                         return RedirectToAction("Details", new { id = c.Id });
                     }
                 }
-                return RedirectToAction("StateNotExist");
+                return RedirectToAction(nameof(StateNotExist));
             }
         }
 
@@ -102,35 +106,30 @@ namespace WebApplication1.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Name,StateCode,Area,Population")] Country country, 
-            string City, string Region)
+        public async Task<IActionResult> Create(string City, string Region,
+            [Bind("Name,StateCode,Area,Population")] Country country)
         {
-
-            if(string.IsNullOrEmpty(City)==false && string.IsNullOrEmpty(Region)==false)
-            if (ModelState.IsValid)
+            if (string.IsNullOrEmpty(City) == false && string.IsNullOrEmpty(Region) == false)
             {
-                    this.CityId = cc.DoesCityExist(City);
-                    this.RegionId = cr.DoesRegionExist(Region);
-                    if(this.CityId >= 0 && this.RegionId >=0)
-                    {
-                        country.CityId = this.CityId;
-                        country.RegionId = this.RegionId;
-                    }
-                    else if(this.CityId >= 0 && this.RegionId < 0)
-                    {
-                        country.CityId = this.CityId;
-                    }
-                    else if(this.CityId < 0 && this.RegionId >= 0)
-                    {
-                        country.RegionId = this.RegionId;
-                    }
+                this.CityId = cc.DoesCityExist(City);
+                this.RegionId = cr.DoesRegionExist(Region);
 
+                country.CityId = this.CityId;
+                country.RegionId = this.RegionId;
+
+                try
+                {
                     _context.Add(country);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Details), country.Id);
+                }
+                catch(Exception ex)
+                {
+                    return RedirectToAction(nameof(PublishMsg), ex.Message);
+                }
+                
             }
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Id", country.CityId);
-            return View(country);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Countries/Edit/5
@@ -154,7 +153,6 @@ namespace WebApplication1.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StateCode,Area,Population,CityId")] Country country)
         {
             if (id != country.Id)

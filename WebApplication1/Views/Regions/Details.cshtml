@@ -1,4 +1,4 @@
-﻿@model WebApplication1.Models.City
+﻿@model WebApplication1.Models.Region
 
 @{
     Layout = null;
@@ -31,8 +31,10 @@
             <th>
                 <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
                 <a asp-action="Edit" asp-route-id="@Model.Id">Delete</a>
+
             </th>
         </tr>
     </table>
+  
 </body>
 </html>

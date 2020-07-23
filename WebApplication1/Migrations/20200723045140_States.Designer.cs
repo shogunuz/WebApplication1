@@ -9,8 +9,8 @@ using WebApplication1.Models;
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(CountryContext))]
-    [Migration("20200722070020_InitalCreate")]
-    partial class InitalCreate
+    [Migration("20200723045140_States")]
+    partial class States
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

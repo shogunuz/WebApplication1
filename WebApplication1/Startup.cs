@@ -28,6 +28,8 @@ namespace WebApplication1
         {
             services.AddMvc();
             // services.AddCors();
+            // Работаем через
+            // EntityFrameworkCore\Add - Migration
             services.AddControllersWithViews()
                .AddNewtonsoftJson(options =>
                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore

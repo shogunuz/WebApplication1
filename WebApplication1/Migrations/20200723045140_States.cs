@@ -2,7 +2,7 @@
 
 namespace WebApplication1.Migrations
 {
-    public partial class InitalCreate : Migration
+    public partial class States : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
