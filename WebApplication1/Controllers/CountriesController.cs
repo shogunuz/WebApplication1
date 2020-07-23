@@ -88,6 +88,7 @@ namespace WebApplication1.Controllers
         public IActionResult Create()
         {
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Id");
+           // ViewBag.Name = 
             return View();
         }
 
@@ -99,6 +100,7 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Create([Bind("Id,Name,StateCode,Area,Population")] Country country, 
             string City, string Region)
         {
+
             if(string.IsNullOrEmpty(City)==false && string.IsNullOrEmpty(Region)==false)
             if (ModelState.IsValid)
             {

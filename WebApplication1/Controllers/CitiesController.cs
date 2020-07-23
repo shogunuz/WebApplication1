@@ -45,7 +45,7 @@ namespace WebApplication1.Controllers
 
         // GET: Cities/Create
         [HttpGet]
-        public IActionResult CreateForm()
+        public IActionResult Create()
         {
             return View();
         }
@@ -54,21 +54,17 @@ namespace WebApplication1.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name")] City city)
         {
-           // string name = Request.Form["Name"];
-
             if (ModelState.IsValid)
             {
                 _context.Add(city);
                 await _context.SaveChangesAsync();
 
-
                 return RedirectToAction(nameof(Index));
             }
 
-            return RedirectToAction("Details", new {id = city.Id });
+            return RedirectToAction(nameof(Details), 4);
         }
 
         // GET: Cities/Edit/5

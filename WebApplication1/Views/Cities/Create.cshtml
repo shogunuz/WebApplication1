@@ -9,28 +9,32 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Details of @Html.DisplayFor(model => model.Name)</title>
+    <title>Create</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
 
 </head>
 <body>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
-    <h2 class="text-center text-success"> Details of  @Html.DisplayFor(model => model.Name)</h2>
 
-    <table class="table table-bordered table-striped table-hover" width=400>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayFor(model => model.Name)
-            </th>
-        </tr>
-        <tr>
-            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-            @Html.ActionLink("Back to the List", nameof(Index))
-        </tr>
-    </table>
+    <h2 class="text-center text-success"> Creating new city </h2>
+
+    <hr />
+    <form action="/Cities/Create" method="post">
+
+        <div class="form-group">
+            <label>Input city name</label>
+            <input type="text" name="Name" />
+        </div>
+        <p> </p>
+        <p> </p>
+        <input type="submit" value="Отправить" />
+    </form>
+    <p> </p>
+    <p> </p>
+    <div>
+        @Html.ActionLink("Back to the List", nameof(Index))
+    </div>
+
 </body>
 </html>
