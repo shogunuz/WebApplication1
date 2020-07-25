@@ -13,9 +13,11 @@ namespace WebApplication1.Controllers
     public class CitiesController : Controller
     {
         private readonly CountryContext _context;
+        private CreateCityOrRegion cc;
         public CitiesController(CountryContext context)
         {
             _context = context;
+            cc = new CreateCityOrRegion();
         }
 
         // GET: Cities
@@ -58,14 +60,14 @@ namespace WebApplication1.Controllers
             int tmp=0;
             if (ModelState.IsValid)
             {
-                CreateCity cc = new CreateCity();
-                tmp = cc.DoesCityExist(city.Name);
+                tmp = cc.DoesLocationExist(city.Name, city);
                 if(tmp >= 0)
                 {
                     return RedirectToAction(nameof(Details), tmp);
                 }
                 else
                 {
+                    //попробовать реализовать через интерфейс гет и пост запросы!!
                     _context.Add(city);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Details), city.Id);

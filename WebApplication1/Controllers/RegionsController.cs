@@ -6,16 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
+using WebApplication1.Repos;
 
 namespace WebApplication1.Controllers
 {
     public class RegionsController : Controller
     {
         private readonly CountryContext _context;
-
+        private CreateCityOrRegion cc;
         public RegionsController(CountryContext context)
         {
             _context = context;
+            cc = new CreateCityOrRegion();
         }
 
         // GET: Regions
@@ -52,15 +54,22 @@ namespace WebApplication1.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id, Name")] Region region)
+        public async Task<IActionResult> Create([Bind("Name")] Region region)
         {
             int tmp = 0;
             if (ModelState.IsValid)
             {
-                _context.Add(region);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Details), tmp);
+                tmp = cc.DoesLocationExist(region.Name, region);
+                if (tmp >= 0)
+                {
+                    return RedirectToAction(nameof(Details), tmp);
+                }
+                else
+                {
+                    _context.Add(region);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Details), region.Id);
+                }
             }
             return RedirectToAction(nameof(Index));
         }
