@@ -14,11 +14,11 @@ namespace WebApplication1.Controllers
     public class RegionsController : Controller
     {
         private readonly CountryContext _context;
-        private CreateLocation cr;
+        private CreateRegion cr;
         public RegionsController(CountryContext context)
         {
             _context = context;
-            cr = new CreateLocation();
+            cr = new CreateRegion();
         }
         public IActionResult PublishMsg(string str)
         {
@@ -61,13 +61,13 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([Bind("Name")] Region region)
         {
-            int tmp = 0;
+            int ids = 0;
             if (ModelState.IsValid)
             {
                 try
                 {
-                    tmp = cr.DoesLocationExist(region.Name, region);
-                     return RedirectToAction(nameof(Details), new { id = tmp });
+                    ids = cr.RegionCreation(region.Name);
+                     return RedirectToAction(nameof(Details), new { id = ids });
                 }
                 catch (MyException ex)
                 {

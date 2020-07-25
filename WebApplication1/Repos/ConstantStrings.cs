@@ -11,7 +11,7 @@ namespace WebApplication1.Repos
        
         internal const string UrlLinkToRegions = "https://localhost:44393/api/RegionsDTO";
 
-        internal const string UrlLinkToContries= "https://localhost:44393/api/CountriesDTOController";
+        internal const string UrlLinkToContries= "https://localhost:44393/api/CountriesDTO";
         
     }
 }

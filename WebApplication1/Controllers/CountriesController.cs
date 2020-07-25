@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Exceptions;
 using WebApplication1.Models;
 using WebApplication1.Repos;
 namespace WebApplication1.Controllers
@@ -13,13 +14,17 @@ namespace WebApplication1.Controllers
     public class CountriesController : Controller
     {
         private readonly CountryContext _context;
-        private CreateLocation cr;
         private int CityId;
         private int RegionId;
+        private CreateCity cc;
+        private CreateRegion cr;
+        private CreateCountry cs;
         public CountriesController(CountryContext context)
         {
             _context = context;
-            cr = new CreateLocation();
+            cr = new CreateRegion();
+            cc = new CreateCity();
+            cs = new CreateCountry();
         }
 
         // GET: Countries
@@ -33,7 +38,7 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        public IActionResult NoResult()
+        public IActionResult WrongData()
         {
            return View();
         }
@@ -69,14 +74,13 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Find(string name)
         {
-            
             if (string.IsNullOrEmpty(name) == false)
                 {
                    return innerMethod();
                 }
             else
             {
-                return RedirectToAction(nameof(NoResult));
+                return RedirectToAction(nameof(WrongData));
             }
             IActionResult innerMethod()
             {
@@ -95,9 +99,6 @@ namespace WebApplication1.Controllers
         // GET: Countries/Create
         public IActionResult Create()
         {
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Id");
-            ViewData["RegionId"] = new SelectList(_context.Regions, "Id", "Id");
-           // ViewBag.Name = 
             return View();
         }
 
@@ -106,80 +107,59 @@ namespace WebApplication1.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         public async Task<IActionResult> Create(string City, string Region,string Area,
-            [Bind("Name,StateCode,Population")] Country country)
+            [Bind("Name,StateCode,Population")] Country state)
         {
             if (string.IsNullOrEmpty(City) == false && string.IsNullOrEmpty(Region) == false)
             {
                 double.TryParse(Area, NumberStyles.Number, CultureInfo.InvariantCulture, out double area);
-                country.Area = area;
-                try
+                state.Area = area;
+                state.CityId = cc.CityCreation(City);
+                state.RegionId = cr.RegionCreation(Region);
+                int tmpId = cs.GetCountryId(state.Name);
+                if ( tmpId < 0)
                 {
-                    country.CityId = cr.DoesLocationExist(City, new City());
-                    country.RegionId = cr.DoesLocationExist(Region, new Region());
-                    country.Id = cr.DoesLocationExist(country.Name, new Country());
-                    return RedirectToAction(nameof(Details), country.Id);
+                    try
+                    {
+                        _context.Add(state);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Details), new { id = state.Id });
+                    }
+                    catch (MyException ex)
+                    {
+                        return RedirectToAction(nameof(PublishMsg), new { str = ex.Message });
+                    }
+                    catch (Exception e)
+                    {
+                        return RedirectToAction(nameof(PublishMsg), 
+                            new {str = e.Message });
+                    }
                 }
-                catch(Exception ex)
+                else
                 {
-                    return RedirectToAction(nameof(PublishMsg), ex.Message);
+                    state.Id = tmpId;
+                    try
+                    {
+                        _context.Update(state);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Details), new { id = state.Id });
+                    }
+                    catch (DbUpdateConcurrencyException ed)
+                    {
+                        return RedirectToAction(nameof(PublishMsg),
+                          new { str = ed.Message });
+                    }
+                    catch (Exception ex)
+                    {
+                        return RedirectToAction(nameof(PublishMsg),
+                          new { str = ex.Message });
+                    }
                 }
-                
+
             }
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Countries/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var country = await _context.Countries.FindAsync(id);
-            if (country == null)
-            {
-                return NotFound();
-            }
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Id", country.CityId);
-            return View(country);
-        }
-
-        // POST: Countries/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StateCode,Area,Population,CityId")] Country country)
-        {
-            if (id != country.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(country);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CountryExists(country.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Id", country.CityId);
-            return View(country);
-        }
-
+        
         // GET: Countries/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

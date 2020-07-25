@@ -20,14 +20,14 @@ namespace WebApplication1.api
             _context = context;
         }
 
-        // GET: api/Countries
+        // GET: api/CountriesDTO
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
             return await _context.Countries.ToListAsync();
         }
 
-        // GET: api/Countries/5
+        // GET: api/CountriesDTO/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Country>> GetCountry(int id)
         {

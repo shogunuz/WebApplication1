@@ -50,7 +50,7 @@ namespace WebApplication1
                 //https://localhost:44393/Countries/details/1
                 endpoints.MapControllerRoute(
                    name: "Details",
-                   pattern: "{controller=Countries}/{action=Index}/{id?}");
+                   pattern: "{controller=Countries}/{action=Index}/{id?}/{x?}");
 
             });
 

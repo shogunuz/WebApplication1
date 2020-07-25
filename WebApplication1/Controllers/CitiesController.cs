@@ -14,11 +14,11 @@ namespace WebApplication1.Controllers
     public class CitiesController : Controller
     {
         private readonly CountryContext _context;
-        private CreateLocation cr;
+        private CreateCity cc;
         public CitiesController(CountryContext context)
         {
             _context = context;
-            cr = new CreateLocation();
+            cc = new CreateCity();
         }
         public IActionResult PublishMsg(string str)
         {
@@ -60,15 +60,14 @@ namespace WebApplication1.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Name")] City city)
+        public async Task<IActionResult> Create(string Name)
         {
-            int tmp=0;
             if (ModelState.IsValid)
             {
                 try
                 {
-                    tmp = cr.DoesLocationExist(city.Name, city);
-                    return RedirectToAction(nameof(Details), new { id = tmp });
+                    int tmpId = cc.CityCreation(Name);
+                    return RedirectToAction(nameof(Details),new { id = tmpId });
                 }
                 catch(MyException ex)
                 {
