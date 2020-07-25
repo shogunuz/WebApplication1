@@ -13,15 +13,13 @@ namespace WebApplication1.Controllers
     public class CountriesController : Controller
     {
         private readonly CountryContext _context;
-        private CreateCity cc;
-        private CreateRegion cr;
+        private CreateLocation cr;
         private int CityId;
         private int RegionId;
         public CountriesController(CountryContext context)
         {
             _context = context;
-            cc = new CreateCity();
-            cr = new CreateRegion();
+            cr = new CreateLocation();
         }
 
         // GET: Countries
@@ -49,7 +47,7 @@ namespace WebApplication1.Controllers
         {
             if (id == null)
             {
-                return RedirectToAction("StateNotExist");
+                return RedirectToAction(nameof(StateNotExist));
             }
 
             var country = await _context.Countries
@@ -57,7 +55,7 @@ namespace WebApplication1.Controllers
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (country == null)
             {
-                return RedirectToAction("StateNotExist");
+                return RedirectToAction(nameof(StateNotExist));
             }
 
             return View(country);
@@ -78,7 +76,7 @@ namespace WebApplication1.Controllers
                 }
             else
             {
-                return RedirectToAction("NoResult");
+                return RedirectToAction(nameof(NoResult));
             }
             IActionResult innerMethod()
             {
@@ -87,7 +85,7 @@ namespace WebApplication1.Controllers
                 {
                     if (c.Name == name)
                     {
-                        return RedirectToAction("Details", new { id = c.Id });
+                        return RedirectToAction(nameof(Details), new { id = c.Id });
                     }
                 }
                 return RedirectToAction(nameof(StateNotExist));
@@ -114,13 +112,12 @@ namespace WebApplication1.Controllers
             {
                 double.TryParse(Area, NumberStyles.Number, CultureInfo.InvariantCulture, out double area);
                 country.Area = area;
-                country.CityId = cc.DoesCityExist(City);
-                country.RegionId = cr.DoesRegionExist(Region);
-
                 try
                 {
-                    _context.Add(country);
-                    await _context.SaveChangesAsync();
+                    country.CityId = cr.DoesLocationExist(City, new City());
+                    country.RegionId = cr.DoesLocationExist(Region, new Region());
+                    country.Id = cr.DoesLocationExist(country.Name, new Country());
+                    return RedirectToAction(nameof(Details), country.Id);
                 }
                 catch(Exception ex)
                 {

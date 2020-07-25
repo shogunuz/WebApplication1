@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Exceptions;
 using WebApplication1.Models;
 using WebApplication1.Repos;
 
@@ -13,13 +14,17 @@ namespace WebApplication1.Controllers
     public class CitiesController : Controller
     {
         private readonly CountryContext _context;
-        private CreateCityOrRegion cc;
+        private CreateLocation cr;
         public CitiesController(CountryContext context)
         {
             _context = context;
-            cc = new CreateCityOrRegion();
+            cr = new CreateLocation();
         }
-
+        public IActionResult PublishMsg(string str)
+        {
+            ViewBag.Message = str;
+            return View();
+        }
         // GET: Cities
         public async Task<IActionResult> Index()
         {
@@ -60,17 +65,14 @@ namespace WebApplication1.Controllers
             int tmp=0;
             if (ModelState.IsValid)
             {
-                tmp = cc.DoesLocationExist(city.Name, city);
-                if(tmp >= 0)
+                try
                 {
-                    return RedirectToAction(nameof(Details), tmp);
+                    tmp = cr.DoesLocationExist(city.Name, city);
+                    return RedirectToAction(nameof(Details), new { id = tmp });
                 }
-                else
+                catch(MyException ex)
                 {
-                    //попробовать реализовать через интерфейс гет и пост запросы!!
-                    _context.Add(city);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Details), city.Id);
+                    return RedirectToAction(nameof(PublishMsg), ex.Message);
                 }
             }
 

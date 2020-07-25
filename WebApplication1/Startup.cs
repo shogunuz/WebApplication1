@@ -50,7 +50,7 @@ namespace WebApplication1
                 //https://localhost:44393/Countries/details/1
                 endpoints.MapControllerRoute(
                    name: "Details",
-                   pattern: "{controller=Countries}/{action=Index}/{id?}"); // route template состоит из 2х сегментов
+                   pattern: "{controller=Countries}/{action=Index}/{id?}");
 
             });
 

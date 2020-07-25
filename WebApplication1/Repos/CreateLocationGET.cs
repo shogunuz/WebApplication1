@@ -10,7 +10,7 @@ using WebApplication1.Models;
 namespace WebApplication1.Repos
 {
 
-    public class CreateCityOrRegionGET
+    public class CreateLocationGET
     {
         public int CheckLocationExternal(string name, object obj)
         {
@@ -19,7 +19,7 @@ namespace WebApplication1.Repos
         private int CheckLocationInternal(string name, object obj)
         {
             int id = -1;
-            string link = CreateCityOrRegion.GetLink(obj);
+            string link = GetLinkOfLocation.GetLink(obj);
            
             WebRequest request = WebRequest.Create(link);
             using (WebResponse response = request.GetResponse())
@@ -44,6 +44,7 @@ namespace WebApplication1.Repos
                                 if (city.Name == name)
                                 {
                                     id = city.Id;
+                                    break;
                                 }
                             break;
                             case Region region:
@@ -51,6 +52,15 @@ namespace WebApplication1.Repos
                                 if (region.Name == name)
                                 {
                                     id = region.Id;
+                                    break;
+                                }
+                                break;
+                            case Country country:
+                                country = serializer.Deserialize<Country>(reader);
+                                if (country.Name == name)
+                                {
+                                    id = country.Id;
+                                    break;
                                 }
                                 break;
                             default:
