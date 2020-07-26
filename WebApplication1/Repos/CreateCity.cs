@@ -14,6 +14,12 @@ namespace WebApplication1.Repos
 
     public class CreateCity
     {
+        private readonly CountryContext _context;
+        public CreateCity(CountryContext context)
+        {
+            _context = context;
+        }
+       
         public int CityCreation(string Name)
         {
             int id = GetCityId(Name);
@@ -25,39 +31,21 @@ namespace WebApplication1.Repos
                 return GetCityId(Name);
             }
         }
-        private int GetCityId(string Name)
+        private int GetCityId(string name)
         {
-            int id = -1;
-                WebRequest request = WebRequest.Create(ConstantStrings.UrlLinkToCities);
-                using (WebResponse response = request.GetResponse())
-                using (Stream stream = response.GetResponseStream())
-                using (StreamReader streamReader = new StreamReader(stream))
-                using (JsonTextReader reader = new JsonTextReader(streamReader))
-                {
-                    reader.SupportMultipleContent = true;
-                    var serializer = new JsonSerializer();
+            int getCityId()
+            {
+                var city = _context.Cities
+                    .FirstOrDefault(n => n.Name == name);
 
-                    /* Хочу читать по кусочкам, а не целую порцию,
-                     * ибо не факт, что я всегда буду получать маленькую 
-                     * порцию данных.
-                     * In terms of drawbacks, I make connect engaged while loop is working...
-                     */
-                    while (reader.Read())
-                    {
-                        if (reader.TokenType == JsonToken.StartObject)
-                        {
-                             City cityIn = serializer.Deserialize<City>(reader);
-                             if (Name == cityIn.Name)
-                            {
-                                id = cityIn.Id;
-                                break;
-                            }
-                        }
-                    }
-                }
-            return id;
+                if (city == null)
+                    return -1;
+
+                return city.Id;
+            }
+
+            return getCityId();
         }
-
         private static Task<HttpResponseMessage> CreateCityInDB(string name)
         {
             string json = JsonConvert.SerializeObject(new City { Name = name });

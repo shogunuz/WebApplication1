@@ -18,7 +18,7 @@ namespace WebApplication1.Controllers
         public RegionsController(CountryContext context)
         {
             _context = context;
-            cr = new CreateRegion();
+            cr = new CreateRegion(_context);
         }
         public IActionResult PublishMsg(string str)
         {
@@ -61,106 +61,26 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([Bind("Name")] Region region)
         {
-            int ids = 0;
-            if (ModelState.IsValid)
+            if (string.IsNullOrEmpty(region.Name))
             {
                 try
                 {
-                    ids = cr.RegionCreation(region.Name);
-                     return RedirectToAction(nameof(Details), new { id = ids });
+                    int tmpId = cr.RegionCreation(region.Name);
+
+                    return RedirectToAction(nameof(Details),
+                        new { id = tmpId });
                 }
                 catch (MyException ex)
                 {
                     return RedirectToAction(nameof(PublishMsg), ex.Message);
                 }
+                catch (Exception e)
+                {
+                    return RedirectToAction(nameof(PublishMsg), e.Message);
+                }
             }
-
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Regions/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var region = await _context.Regions.FindAsync(id);
-            if (region == null)
-            {
-                return NotFound();
-            }
-            return View(region);
-        }
-
-        // POST: Regions/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Region region)
-        {
-            if (id != region.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(region);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RegionExists(region.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(region);
-        }
-
-        // GET: Regions/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var region = await _context.Regions
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (region == null)
-            {
-                return NotFound();
-            }
-
-            return View(region);
-        }
-
-        // POST: Regions/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var region = await _context.Regions.FindAsync(id);
-            _context.Regions.Remove(region);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool RegionExists(int id)
-        {
-            return _context.Regions.Any(e => e.Id == id);
-        }
     }
 }
