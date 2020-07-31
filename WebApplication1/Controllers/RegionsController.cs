@@ -14,11 +14,11 @@ namespace WebApplication1.Controllers
     public class RegionsController : Controller
     {
         private readonly CountryContext _context;
-        private CreateRegion cr;
+        private RegionCreation createRegion;
         public RegionsController(CountryContext context)
         {
             _context = context;
-            cr = new CreateRegion(_context);
+            createRegion = new RegionCreation(_context);
         }
         public IActionResult PublishMsg(string str)
         {
@@ -65,7 +65,7 @@ namespace WebApplication1.Controllers
             {
                 try
                 {
-                    int tmpId = cr.RegionCreation(region.Name);
+                    int tmpId = createRegion.CreateRegion(region.Name);
 
                     return RedirectToAction(nameof(Details),
                         new { id = tmpId });

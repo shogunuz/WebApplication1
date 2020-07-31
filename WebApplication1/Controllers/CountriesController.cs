@@ -14,17 +14,15 @@ namespace WebApplication1.Controllers
     public class CountriesController : Controller
     {
         private readonly CountryContext _context;
-        private int CityId;
-        private int RegionId;
-        private CreateCity cc;
-        private CreateRegion cr;
-        private CreateCountry cs;
+        private CityCreation cityCreation;
+        private RegionCreation regionCreation;
+        private CountryCreation countryCreation;
         public CountriesController(CountryContext context)
         {
             _context = context;
-            cr = new CreateRegion(_context);
-            cc = new CreateCity(_context);
-            cs = new CreateCountry();
+            regionCreation = new RegionCreation(_context);
+            cityCreation = new CityCreation(_context);
+            countryCreation = new CountryCreation(_context);
         }
 
         // GET: Countries
@@ -75,24 +73,20 @@ namespace WebApplication1.Controllers
         public IActionResult Find(string name)
         {
             if (string.IsNullOrEmpty(name) == false)
+            {
+                int tmpId = countryCreation.GetCountryId(name);
+                if(tmpId>=0)
                 {
-                   return innerMethod();
+                    return RedirectToAction(nameof(Details), new { id = tmpId });
                 }
+                else
+                {
+                    return RedirectToAction(nameof(StateNotExist));
+                }
+            }
             else
             {
                 return RedirectToAction(nameof(WrongData));
-            }
-            IActionResult innerMethod()
-            {
-                var countryContext = _context.Countries.Include(c => c.City);
-                foreach (var c in countryContext.ToList())
-                {
-                    if (c.Name == name)
-                    {
-                        return RedirectToAction(nameof(Details), new { id = c.Id });
-                    }
-                }
-                return RedirectToAction(nameof(StateNotExist));
             }
         }
 
@@ -113,9 +107,9 @@ namespace WebApplication1.Controllers
             {
                 double.TryParse(Area, NumberStyles.Number, CultureInfo.InvariantCulture, out double area);
                 state.Area = area;
-                state.CityId = cc.CityCreation(City);
-                state.RegionId = cr.RegionCreation(Region);
-                int tmpId = cs.GetCountryId(state.Name);
+                state.CityId = cityCreation.CreateCity(City);
+                state.RegionId = regionCreation.CreateRegion(Region);
+                int tmpId = countryCreation.GetCountryId(state.Name);
                 if ( tmpId < 0)
                 {
                     try

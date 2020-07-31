@@ -14,11 +14,11 @@ namespace WebApplication1.Controllers
     public class CitiesController : Controller
     {
         private readonly CountryContext _context;
-        private CreateCity cc;
+        private CityCreation cityCreation;
         public CitiesController(CountryContext context)
         {
             _context = context;
-            cc = new CreateCity(_context);
+            cityCreation = new CityCreation(_context);
         }
         public IActionResult PublishMsg(string str)
         {
@@ -66,7 +66,7 @@ namespace WebApplication1.Controllers
             {
                 try
                 {
-                    int tmpId = cc.CityCreation(name);
+                    int tmpId = cityCreation.CreateCity(name);
                     return RedirectToAction(nameof(Details), new { id = tmpId });
                 }
                 catch (MyException ex)
