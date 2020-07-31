@@ -13,7 +13,7 @@ using WebApplication1.Models;
 namespace WebApplication1.Repos
 {
 
-    public class RegionCreation
+    public class RegionCreation : ICreation
     {
         private readonly CountryContext _context;
         public RegionCreation(CountryContext context)
@@ -30,19 +30,19 @@ namespace WebApplication1.Repos
         * just created in order to return result to the caller. So, in both cases I will need
         * GetRegionId method.
         */
-        public int CreateRegion(string name)
+        public int Create(string name)
         {
-            int id = GetRegionId(name);
+            int id = GetId(name);
             if (id >= 0)
                 return id;
             else
             {
-                CreateRegionInDB(name).Wait();
-                return GetRegionId(name);
+                CreateRecordInDB(name).Wait();
+                return GetId(name);
             }
         }
 
-        private int GetRegionId(string name)
+        public int GetId(string name)
         {
            int getRegionId()
             {
@@ -56,7 +56,7 @@ namespace WebApplication1.Repos
             return getRegionId();
         }
 
-        private async Task<IActionResult> CreateRegionInDB(string name)
+        public async Task<IActionResult> CreateRecordInDB(string name)
         {
             _context.Add(new Region { Name = name });
             await _context.SaveChangesAsync();

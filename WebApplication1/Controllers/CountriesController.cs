@@ -14,14 +14,14 @@ namespace WebApplication1.Controllers
     public class CountriesController : Controller
     {
         private readonly CountryContext _context;
-        private CityCreation cityCreation;
-        private RegionCreation regionCreation;
         private CountryCreation countryCreation;
+        private CreationArea creationCity;
+        private CreationArea creationRegion;
         public CountriesController(CountryContext context)
         {
             _context = context;
-            regionCreation = new RegionCreation(_context);
-            cityCreation = new CityCreation(_context);
+            creationRegion = new CreationArea(new RegionCreation(_context));
+            creationCity = new CreationArea(new CityCreation(_context));
             countryCreation = new CountryCreation(_context);
         }
 
@@ -107,8 +107,8 @@ namespace WebApplication1.Controllers
             {
                 double.TryParse(Area, NumberStyles.Number, CultureInfo.InvariantCulture, out double area);
                 state.Area = area;
-                state.CityId = cityCreation.CreateCity(City);
-                state.RegionId = regionCreation.CreateRegion(Region);
+                state.CityId = creationCity.Create(City);
+                state.RegionId = creationRegion.Create(Region);
                 int tmpId = countryCreation.GetCountryId(state.Name);
                 if ( tmpId < 0)
                 {

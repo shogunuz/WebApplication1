@@ -66,7 +66,7 @@ namespace WebApplication1.Controllers
             {
                 try
                 {
-                    int tmpId = cityCreation.CreateCity(name);
+                    int tmpId = cityCreation.Create(name);
                     return RedirectToAction(nameof(Details), new { id = tmpId });
                 }
                 catch (MyException ex)

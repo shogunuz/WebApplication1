@@ -59,13 +59,13 @@ namespace WebApplication1.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Name")] Region region)
+        public async Task<IActionResult> Create(string name)
         {
-            if (string.IsNullOrEmpty(region.Name))
+            if (string.IsNullOrEmpty(name))
             {
                 try
                 {
-                    int tmpId = createRegion.CreateRegion(region.Name);
+                    int tmpId = createRegion.Create(name);
 
                     return RedirectToAction(nameof(Details),
                         new { id = tmpId });

@@ -13,7 +13,7 @@ using WebApplication1.Models;
 namespace WebApplication1.Repos
 {
 
-    public class CityCreation
+    public class CityCreation : ICreation
     {
         private readonly CountryContext _context;
         public CityCreation(CountryContext context)
@@ -32,20 +32,20 @@ namespace WebApplication1.Repos
         * GetCityId method.
         */
 
-        public int CreateCity(string Name)
+        public int Create(string Name)
         {
-            int id = GetCityId(Name);
+            int id = GetId(Name);
             if (id >= 0)
                 return id;
             else
             {
-                CreateCityInDB(Name).Wait();
-                return GetCityId(Name);
+                CreateRecordInDB(Name).Wait();
+                return GetId(Name);
             }
         }
 
        
-        private int GetCityId(string name)
+        public int GetId(string name)
         {
             int getCityId()
             {
@@ -60,7 +60,7 @@ namespace WebApplication1.Repos
 
             return getCityId();
         }
-        private async Task<IActionResult> CreateCityInDB(string name)
+        public async Task<IActionResult> CreateRecordInDB(string name)
         {
             _context.Add(new City { Name = name});
             await _context.SaveChangesAsync();
