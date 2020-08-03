@@ -7,26 +7,26 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Repos
 {
-    public class CreationArea
+    public class Creation
     {
         
-        public ICreation Creation;
-        public CreationArea(ICreation creation)
+        public ICreation creation;
+        public Creation(ICreation creation)
         {
-            this.Creation = creation;
+            this.creation = creation;
         }
 
         public int Create(string Name)
         {
-            return Creation.Create(Name);
+            return creation.Create(Name);
         }
         public int GetId(string name) 
         {
-            return Creation.GetId(name);
+            return creation.GetId(name);
         }
         public Task<IActionResult> CreateRecordInDB(string name)
         {
-            return Creation.CreateRecordInDB(name);
+            return creation.CreateRecordInDB(name);
         }
 
     }

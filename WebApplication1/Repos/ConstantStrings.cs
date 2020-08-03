@@ -8,11 +8,7 @@ namespace WebApplication1.Repos
     public class ConstantStrings
     {
         private ConstantStrings() { }
-        internal const string UrlLinkToCities = "https://localhost:44393/api/CitiesDTO";
+        internal const string UrlLinkToForeignAPI = "https://restcountries.eu/rest/v2/name/Ukraine";
        
-        internal const string UrlLinkToRegions = "https://localhost:44393/api/RegionsDTO";
-
-        internal const string UrlLinkToContries= "https://localhost:44393/api/CountriesDTO";
-        
     }
 }

@@ -15,13 +15,13 @@ namespace WebApplication1.Controllers
     {
         private readonly CountryContext _context;
         private CountryCreation countryCreation;
-        private CreationArea creationCity;
-        private CreationArea creationRegion;
+        private Creation creationCity;
+        private Creation creationRegion;
         public CountriesController(CountryContext context)
         {
             _context = context;
-            creationRegion = new CreationArea(new RegionCreation(_context));
-            creationCity = new CreationArea(new CityCreation(_context));
+            creationRegion = new Creation(new RegionCreation(_context));
+            creationCity = new Creation(new CityCreation(_context));
             countryCreation = new CountryCreation(_context);
         }
 

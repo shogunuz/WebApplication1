@@ -1,0 +1,161 @@
+﻿@model IEnumerable<WebApplication1.Repos.ForeignAPI.MyArray>
+@{
+    //Layout = null;
+    ViewBag.Title = "ExternalList";
+}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>List of External Data</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+    <h2 class="text-center text-success">List of External Data</h2>
+ 
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.topLevelDomain)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.alpha2Code)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.alpha3Code)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.callingCodes)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.capital)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.altSpellings)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.region)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.subregion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.population)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.latlng)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.demonym)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.area)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.timezones)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.borders)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.nativeName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.numericCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.currencies)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.languages)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.translations)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.flag)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.topLevelDomain)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.alpha2Code)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.alpha3Code)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.callingCodes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.capital)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.altSpellings)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.region)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.subregion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.population)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.latlng)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.demonym)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.area)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.timezones)
+                </td>
+                <td>
+                    @foreach (var subItem in item.borders)
+                        {
+                            @Html.DisplayFor(modelItem => subItem)
+                           <br />
+                        }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nativeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.numericCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.currencies)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.languages)
+                </td>
+                <td width="300">
+                    @Html.DisplayFor(modelItem => item.translations)
+                </td>
+                <td>
+                    <img src="@Html.DisplayFor(modelItem => item.flag)" width="100" height="50"/>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</body>
+    </html>
